@@ -1,3 +1,4 @@
+% https://web.casadi.org/blog/mpc-simulink/
 classdef casadi_block < matlab.System & matlab.system.mixin.Propagates
     % untitled Add summary here
     %

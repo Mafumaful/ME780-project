@@ -2,3 +2,4 @@ slprj
 f.c
 f.h
 *.mexw64
+.vscode
