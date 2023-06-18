@@ -107,8 +107,8 @@ args.ubx(2:3:3 * (N + 1), 1) = inf; % upper bound of y
 args.lbx(3:3:3 * (N + 1), 1) = -inf; % lower bound of theta
 args.ubx(3:3:3 * (N + 1), 1) = inf; % upper bound of theta
 
-args.lbx(3 * (N + 1) + 1:2:3 * (N + 1) + 2 * N, 1) = -0.5; % lower bound of delta
-args.ubx(3 * (N + 1) + 1:2:3 * (N + 1) + 2 * N, 1) = 0.5; % upper bound of delta
+args.lbx(3 * (N + 1) + 1:2:3 * (N + 1) + 2 * N, 1) = -2; % lower bound of delta
+args.ubx(3 * (N + 1) + 1:2:3 * (N + 1) + 2 * N, 1) = 2; % upper bound of delta
 args.lbx(3 * (N + 1) + 2:2:3 * (N + 1) + 2 * N, 1) = 0; % lower bound of front speed
 args.ubx(3 * (N + 1) + 2:2:3 * (N + 1) + 2 * N, 1) = 100; % upper bound of front speed
 
@@ -148,9 +148,11 @@ for i = 1:length(t) - 1
     xx(:, i + 1) = x0; % get solution trajectory
 end
 
-% plot the result
+%% plot the result
 plot(xx(1, :), xx(2, :), 'b.-', 'LineWidth', 2);
 hold on;
+% plot corresponding heading direction
+quiver(xx(1, :), xx(2, :), 2*cos(xx(3, :)), 2*sin(xx(3, :)), 'r');
 plot(target_state(1), target_state(2), 'r*');
 hold off;
 axis equal;
