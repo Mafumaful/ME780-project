@@ -142,9 +142,9 @@ for i = 1:length(t) - 1
     end
 
     xx(:, i + 1) = full(sol.x(1:3)); % get solution trajectory
-%     x0 = full(x0 + h * calc_increment(x0, u_opt)); % update initial state
+    x0 = full(x0 + h_cont * calc_increment(x0, u_opt)); % update initial state
     % calculate the next state
-    x0 = full(sol.x(4:6, :));
+    % x0 = full(sol.x(4:6, :));
     xx(:, i + 1) = x0; % get solution trajectory
 end
 
