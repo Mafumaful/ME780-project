@@ -18,55 +18,39 @@ line = 1; % 1 for straight line path, 2 for spline path, 3 for circle path
 h = 0.2; % sampling time
 N = 20; % prediction horizon
 
-if mode ==1
-    if line == 1
-        % straight line path, efficient mode
-        kappa = 30;
-        Q = diag([4.75,4.75,100]);
-        R = diag([3,20]);
-        E = 2.5*10^-10;
-    elseif line == 2
-        % spline path, efficient mode
-        kappa = 20;
-        Q = diag([10,10,2]);
-        R = diag([1,1]);
-        E = 2.5*10^-10;
-    elseif line == 3
-        % circle path, efficient mode
-        kappa = 0.157;
-        Q = diag([100,100,0]);
-        R = diag([1,1]);
-        E = 2.5*10^-10;
-    else
-        disp('wrong line number');
-    end
-elseif mode == 2
-    if line == 1
-        % straight line path, sport mode
-        kappa = 30;
-        Q = diag([4.75,4.75,100]);
-        R = diag([1,1]);
-        E = 0;
-    elseif line == 2
-        % spline path, sport mode
-        kappa = 20;
-        Q = diag([10,10,2]);
-        R = diag([1,1]);
-        E = 0;
-    elseif line == 3
-        % circle path, sport mode
-        kappa = 0.157;
-        Q = diag([100,100,0]);
-        R = diag([1,1]);
-        E = 0;
-    else
-        disp('wrong line number');
-    end
-else
-    disp('wrong mode number');
-end
+kappa = 0;
+Q = zeros(3,3);
+R = zeros(2,2);
+E = 0;
+
+mode = 1; 
+line = 1;
+choose_mode;
 
 % params for the simulation
+t_cont = 0.01; % continuous time
+t_sim = 20; % simulation time
+t = 0:t_cont:t_sim; % time 
 
 %% models
 import casadi.*
+
+% system model
+% states
+s_dt = SX.sym('dt'); % dt
+s_delta = SX.sym('delta'); % steering angle
+s_v = SX.sym('v'); % velocity
+s_x = SX.sym('x'); % x position
+s_y = SX.sym('y'); % y position
+s_theta = SX.sym('theta'); % heading angle
+s_states = [s_x;s_y;s_theta]; % states
+
+input = [s_delta, s_v]; % inputs
+
+% path model
+
+%% control model
+% fuel consumption model
+
+%% simulation
+    
