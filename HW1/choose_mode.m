@@ -34,7 +34,7 @@ elseif cmode == 2
         disp('straight cline path, sport mode');
     elseif cline == 2
         % spcline path, sport mode
-        kappa = 500;
+        kappa = 20;
         Q = diag([10,10,2]);
         R = diag([1,1]);
         E = 0;
