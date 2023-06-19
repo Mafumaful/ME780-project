@@ -202,7 +202,9 @@ plot(xx(1, :), xx(2, :), 'b.-', 'LineWidth', 2);
 hold on;
 % plot corresponding heading direction
 % quiver(xx(1, :), xx(2, :), 0.5 * cos(xx(3, :)), 0.5 * sin(xx(3, :)), 'r');
-plot(full(final_pose(1)), full(final_pose(2)), 'r*');
+% plot(full(final_pose(1)), full(final_pose(2)), 'r*');
+% plot target position
+plot(record_target_theta(1,:), record_target_theta(2,:), 'r.-', 'LineWidth', 2);
 hold off;
 % axis equal;
 grid on;
