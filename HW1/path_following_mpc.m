@@ -167,7 +167,7 @@ for i = 1:length(t) - 1
     if mod(i, h / h_cont) == 1
         % set parameters
         error = norm(xx(:, i) - final_pose);
-        target_state = return_x_reference(x0, line, kappa, error);
+        target_state = return_x_reference(x0, line, kappa);
         
         args.p = [x0; target_state];
 
@@ -201,12 +201,12 @@ figure(1)
 plot(xx(1, :), xx(2, :), 'b.-', 'LineWidth', 2);
 hold on;
 % plot corresponding heading direction
-quiver(xx(1, :), xx(2, :), 0.5 * cos(xx(3, :)), 0.5 * sin(xx(3, :)), 'r');
+% quiver(xx(1, :), xx(2, :), 0.5 * cos(xx(3, :)), 0.5 * sin(xx(3, :)), 'r');
 plot(full(final_pose(1)), full(final_pose(2)), 'r*');
 hold off;
 % axis equal;
 grid on;
-drawnow;
+% drawnow;
 
 % second plot
 figure(2)
@@ -222,7 +222,7 @@ plot(record_target_theta(1,:), record_target_theta(2,:), 'b.-', 'LineWidth', 2);
 grid on;
 
 % get the reference target for example position, target
-function target_state = return_x_reference(x_real, target_line, kappa, error)
+function target_state = return_x_reference(x_real, target_line, kappa)
     import casadi.*
     % Symbols/expressions
     x = x_real(1);
