@@ -1,3 +1,6 @@
+clear xx,record_target_theta;
+close all
+clc
 %% params
 % params for the car
 m = 1615; % kg
@@ -12,8 +15,8 @@ Cd = 0.45; % drag coefficient
 yita = 0.9; % efficiency of the motor
 
 % params for the controller
-cmode = 2; % 1 for efficient mode, 2 for sport mode
-cline = 1; % 1 for straight line path, 2 for spline path, 3 for circle path
+cmode = 1; % 1 for efficient mode, 2 for sport mode
+cline = 2; % 1 for straight line path, 2 for spline path, 3 for circle path
 choose_mode;
 
 h = 0.2; % sampling time
@@ -160,9 +163,11 @@ X0 = repmat(xx(:, 1), 1, N + 1)'; % initial state decision variables
 
 record_target_theta = zeros(3, t_sim/h);
 cnt = 1;
+iter = 1;
 
 % start simulation
 for i = 1:length(t) - 1
+    iter = iter+1;
 
     if mod(i, h / h_cont) == 1
         % set parameters
@@ -198,13 +203,15 @@ end
 %% plot the result
 % first plot
 figure(1)
-plot(xx(1, :), xx(2, :), 'b.-', 'LineWidth', 2);
+% plot according to iteration
+plot(xx(1, 1:iter), xx(2, 1:iter), 'b.-', 'LineWidth', 2);
+% plot(xx(1, :), xx(2, :), 'b.-', 'LineWidth', 2);
 hold on;
 % plot corresponding heading direction
 % quiver(xx(1, :), xx(2, :), 0.5 * cos(xx(3, :)), 0.5 * sin(xx(3, :)), 'r');
 % plot(full(final_pose(1)), full(final_pose(2)), 'r*');
 % plot target position
-plot(record_target_theta(1,:), record_target_theta(2,:), 'r.-', 'LineWidth', 2);
+plot(record_target_theta(1,1:cnt-1), record_target_theta(2,1:cnt-1), 'r*-', 'LineWidth', 0.5);
 hold off;
 % axis equal;
 grid on;
@@ -214,13 +221,13 @@ grid on;
 figure(2)
 % plot the angle onver time
 t2 = h:h:t_sim;
-plot(t2, record_target_theta(3,:), 'b.-', 'LineWidth', 2);
+plot(t2(1:cnt-1), record_target_theta(3,1:cnt-1), 'b.-', 'LineWidth', 2);
 grid on;
 
 % third plot
 figure(3)
 % plot the target position
-plot(record_target_theta(1,:), record_target_theta(2,:), 'b.-', 'LineWidth', 2);
+plot(record_target_theta(1,1:cnt-1), record_target_theta(2,1:cnt-1), 'b.-', 'LineWidth', 2);
 grid on;
 
 % get the reference target for example position, target
