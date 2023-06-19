@@ -1,4 +1,3 @@
-clear xx,record_target_theta;
 close all
 clc
 %% params
@@ -223,7 +222,7 @@ grid on;
 figure(2)
 % plot the angle onver time
 t2 = h:h:t_sim;
-plot(t2, record_target_theta(3, 1:cnt - 1), 'b.-', 'LineWidth', 2);
+plot(t2(1:cnt-1), record_target_theta(3, 1:cnt - 1), 'b.-', 'LineWidth', 2);
 grid on;
 
 % third plot
