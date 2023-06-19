@@ -13,7 +13,7 @@ yita = 0.9; % efficiency of the motor
 
 % params for the controller
 cmode = 1; % 1 for efficient mode, 2 for sport mode
-cline = 1; % 1 for straight line path, 2 for spline path, 3 for circle path
+cline = 3; % 1 for straight line path, 2 for spline path, 3 for circle path
 choose_mode;
 
 h = 0.2; % sampling time
@@ -203,6 +203,7 @@ function target_state = return_x_reference(x_real, target_line, kappa, error)
     g = [];
 
     psi = kappa - kappa / (1 + error);
+    psi = 50;
 
     nlp = struct; % NLP declaration
     nlp.x = s; % decision vars
