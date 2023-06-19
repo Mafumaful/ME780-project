@@ -200,11 +200,11 @@ grid on;
 drawnow;
 
 % second plot
-figure(2)
-% plot the angle onver time
-% cut t as the same length as xx(3, :)
-x = linspace(0, t(end), length(xx(3, :)));
-plot(x, xx(3, :), 'b.-', 'LineWidth', 2);
+% figure(2)
+% % plot the angle onver time
+% % cut t as the same length as xx(3, :)
+% x = linspace(0, t(end), length(xx(3, :)));
+% plot(x, xx(3, :), 'b.-', 'LineWidth', 2);
 
 
 % get the reference target for example position, target
