@@ -14,8 +14,8 @@ Cd = 0.45; % drag coefficient
 yita = 0.9; % efficiency of the motor
 
 % params for the controller
-cmode = 1; % 1 for efficient mode, 2 for sport mode
-cline = 3; % 1 for straight line path, 2 for spline path, 3 for circle path
+cmode = 2; % 1 for efficient mode, 2 for sport mode
+cline = 2; % 1 for straight line path, 2 for spline path, 3 for circle path
 choose_mode;
 
 h = 0.2; % sampling time
@@ -150,9 +150,9 @@ target_state = [0; 0; 0]; % target position
 if cline == 1
     x0 = [0; 1; 0.1]; %initial state for line
 elseif cline == 2
-    x0 = [0; 0; 0]; % initial state for circle
+    x0 = [0; 0; 0]; % initial state for spline
 else
-    x0 = [-2; -50; 0];
+    x0 = [-3; -50; 0];% initial state for circle
 end
 
 xx = zeros(3, length(t)); % states
@@ -161,6 +161,7 @@ u0 = zeros(N, 2); % initial control input
 X0 = repmat(xx(:, 1), 1, N + 1)'; % initial state decision variables
 
 record_target_theta = zeros(3, t_sim / h);
+record_speed = zeros(1,t_sim/h_cont);
 cnt = 1;
 iter = 1;
 
@@ -185,6 +186,7 @@ for i = 1:length(t) - 1
         u = reshape(full(sol.x(3 * (N + 1) + 1:end))', 2, N)'; % get controls only
         u_opt = u(1, :); % get optimal control
         record_target_theta(:, cnt) = full(target_state);
+        
         cnt = cnt + 1;
     end
 
@@ -193,7 +195,7 @@ for i = 1:length(t) - 1
     % calculate the next state
     % x0 = full(sol.x(4:6, :));
     xx(:, i + 1) = x0; % get solution trajectory
-
+    record_speed(i) = full(u_opt(2)*r*3.6);
     if norm(x0 - full(final_pose)) < 1
         break;
     end
@@ -229,6 +231,10 @@ grid on;
 figure(3)
 % plot the target position
 plot(record_target_theta(1, 1:cnt - 1), record_target_theta(2, 1:cnt - 1), 'b.-', 'LineWidth', 2);
+grid on;
+
+figure(4)
+plot(t(1:iter), record_speed(1:iter), 'b.-', 'LineWidth', 2);
 grid on;
 
 % get the reference target for example position, target
