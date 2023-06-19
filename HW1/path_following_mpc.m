@@ -161,19 +161,19 @@ xx(:, 1) = x0; % initial state
 u0 = zeros(N, 2); % initial control input
 X0 = repmat(xx(:, 1), 1, N + 1)'; % initial state decision variables
 
-record_target_theta = zeros(3, t_sim/h);
+record_target_theta = zeros(3, t_sim / h);
 cnt = 1;
 iter = 1;
 
 % start simulation
 for i = 1:length(t) - 1
-    iter = iter+1;
+    iter = iter + 1;
 
     if mod(i, h / h_cont) == 1
         % set parameters
         error = norm(xx(:, i) - final_pose);
         target_state = return_x_reference(x0, line, kappa);
-        
+
         args.p = [x0; target_state];
 
         % set initial condition
@@ -188,16 +188,17 @@ for i = 1:length(t) - 1
         record_target_theta(:, cnt) = full(target_state);
         cnt = cnt + 1;
     end
-    
 
     xx(:, i + 1) = full(sol.x(1:3)); % get solution trajectory
     x0 = full(x0 + h_cont * calc_increment(x0, u_opt)); % update initial state
     % calculate the next state
     % x0 = full(sol.x(4:6, :));
     xx(:, i + 1) = x0; % get solution trajectory
+
     if norm(x0 - full(final_pose)) < 1
         break;
     end
+
 end
 
 %% plot the result
@@ -211,7 +212,8 @@ hold on;
 % quiver(xx(1, :), xx(2, :), 0.5 * cos(xx(3, :)), 0.5 * sin(xx(3, :)), 'r');
 % plot(full(final_pose(1)), full(final_pose(2)), 'r*');
 % plot target position
-plot(record_target_theta(1,1:cnt-1), record_target_theta(2,1:cnt-1), 'r*-', 'LineWidth', 0.5);
+plot(record_target_theta(1, 1:cnt - 1), record_target_theta(2, 1:cnt - 1), 'r*-', 'LineWidth', 0.5);
+legend('trajectory', 'target trajectory');
 hold off;
 % axis equal;
 grid on;
@@ -221,13 +223,13 @@ grid on;
 figure(2)
 % plot the angle onver time
 t2 = h:h:t_sim;
-plot(t2(1:cnt-1), record_target_theta(3,1:cnt-1), 'b.-', 'LineWidth', 2);
+plot(t2, record_target_theta(3, 1:cnt - 1), 'b.-', 'LineWidth', 2);
 grid on;
 
 % third plot
 figure(3)
 % plot the target position
-plot(record_target_theta(1,1:cnt-1), record_target_theta(2,1:cnt-1), 'b.-', 'LineWidth', 2);
+plot(record_target_theta(1, 1:cnt - 1), record_target_theta(2, 1:cnt - 1), 'b.-', 'LineWidth', 2);
 grid on;
 
 % get the reference target for example position, target
@@ -241,8 +243,6 @@ function target_state = return_x_reference(x_real, target_line, kappa)
 
     f = (x - lx) ^ 2 + (y - ly) ^ 2;
     g = [];
-
-    
 
     nlp = struct; % NLP declaration
     nlp.x = s; % decision vars
@@ -262,8 +262,8 @@ function target_state = return_x_reference(x_real, target_line, kappa)
 
     % Solve the problem using a guess
     sol = F('x0', 0, 'ubg', 0, 'lbg', 0);
-    
-    psi = kappa - kappa / (1 + 0.01*(1000-sol.x))
+
+    psi = kappa - kappa / (1 + 0.01 * (1000 - sol.x))
     [x_ref, y_ref, theta] = target_line(sol.x + psi);
     theta = mod(full(theta), 2 * pi);
     target_state = [x_ref; y_ref; theta];
