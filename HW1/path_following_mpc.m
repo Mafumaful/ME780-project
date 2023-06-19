@@ -12,8 +12,8 @@ Cd = 0.45; % drag coefficient
 yita = 0.9; % efficiency of the motor
 
 % params for the controller
-mode = 1; % 1 for efficient mode, 2 for sport mode
-line = 1; % 1 for straight line path, 2 for spline path, 3 for circle path
+cmode = 1; % 1 for efficient mode, 2 for sport mode
+cline = 1; % 1 for straight line path, 2 for spline path, 3 for circle path
 choose_mode;
 
 h = 0.2; % sampling time
@@ -26,7 +26,7 @@ E = 0;
 
 % params for the simulation
 t_cont = 0.01; % continuous time
-t_sim = 20; % simulation time
+t_sim = 100; % simulation time
 t = 0:t_cont:t_sim; % time
 
 %% models
@@ -38,15 +38,15 @@ s_lx = SX.sym('lx'); % x position of the lane
 s_ly = SX.sym('ly'); % y position of the lane
 s_theta = SX.sym('theta'); % heading angle of the lane
 % we describe the lane as a straight line, a spline or a circle in cartesian coordinate
-if line == 1
+if cline == 1
     % straight line
     s_lx = s_epsilon;
     s_ly = 0;
     s_theta = 0;
-elseif line == 2
+elseif cline == 2
     % spline
     % todo
-elseif line == 3
+elseif cline == 3
     % circle
     s_lx = 50 * cos((s_epsilon/1000)*2*pi);
     s_ly = 50 * sin((s_epsilon/1000)*2*pi);
@@ -130,15 +130,22 @@ args.ubx(2:3:3 * (N + 1), 1) = inf; % upper bound of y
 args.lbx(3:3:3 * (N + 1), 1) = -inf; % lower bound of theta
 args.ubx(3:3:3 * (N + 1), 1) = inf; % upper bound of theta
 
-args.lbx(3 * (N + 1) + 1:2:3 * (N + 1) + 2 * N, 1) = -2; % lower bound of delta
-args.ubx(3 * (N + 1) + 1:2:3 * (N + 1) + 2 * N, 1) = 2; % upper bound of delta
+args.lbx(3 * (N + 1) + 1:2:3 * (N + 1) + 2 * N, 1) = -0.5; % lower bound of delta
+args.ubx(3 * (N + 1) + 1:2:3 * (N + 1) + 2 * N, 1) = 0.5; % upper bound of delta
 args.lbx(3 * (N + 1) + 2:2:3 * (N + 1) + 2 * N, 1) = 0; % lower bound of front speed
-args.ubx(3 * (N + 1) + 2:2:3 * (N + 1) + 2 * N, 1) = 100; % upper bound of front speed
+args.ubx(3 * (N + 1) + 2:2:3 * (N + 1) + 2 * N, 1) = 1000; % upper bound of front speed
 
 %% simulation
 % target position
 target_state = [0; 0; 0]; % target position
-x0 = [0; 10; 0]; % initial state
+if cline == 1
+    x0 = [0;1;0.1]; %initial state for line
+elseif cline ==2
+    x0 = [50; 0; pi/2]; % initial state for circle
+else
+    x0=[50; 0; pi/2];
+end
+
 
 xx = zeros(3, length(t)); % states
 xx(:, 1) = x0; % initial state
@@ -163,7 +170,6 @@ for i = 1:length(t) - 1
         % get solution
         u = reshape(full(sol.x(3 * (N + 1) + 1:end))', 2, N)'; % get controls only
         u_opt = u(1, :); % get optimal control
-        u_opt
     end
 
     xx(:, i + 1) = full(sol.x(1:3)); % get solution trajectory
@@ -177,7 +183,7 @@ end
 plot(xx(1, :), xx(2, :), 'b.-', 'LineWidth', 2);
 hold on;
 % plot corresponding heading direction
-% quiver(xx(1, :), xx(2, :), 2 * cos(xx(3, :)), 2 * sin(xx(3, :)), 'r');
+quiver(xx(1, :), xx(2, :), 2 * cos(xx(3, :)), 2 * sin(xx(3, :)), 'r');
 plot(full(final_pose(1)), full(final_pose(2)), 'r*');
 hold off;
 axis equal;
