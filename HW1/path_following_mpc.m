@@ -26,7 +26,7 @@ E = 0;
 
 % params for the simulation
 t_cont = 0.01; % continuous time
-t_sim = 100; % simulation time
+t_sim = 92; % simulation time
 t = 0:t_cont:t_sim; % time
 
 %% models
@@ -48,9 +48,12 @@ elseif cline == 2
     % todo
 elseif cline == 3
     % circle
-    s_lx = 50 * cos((s_epsilon/1000)*2*pi);
-    s_ly = 50 * sin((s_epsilon/1000)*2*pi);
-    s_theta = s_epsilon/1000*2*pi+pi/2;
+    angle = (s_epsilon/1000)*3/2*pi-pi/2;
+    s_lx = 50 * cos(angle);
+    s_ly = 50 * sin(angle);
+%     aim_theta = (angle+pi/2)+((angle-pi*3/2)-(angle+pi/2))*sign(angle-3/2*pi);
+    aim_theta = (angle+pi/2);
+    s_theta = aim_theta;
 end
 
 line = Function('line', {s_epsilon}, {s_lx, s_ly, s_theta});
@@ -141,9 +144,9 @@ target_state = [0; 0; 0]; % target position
 if cline == 1
     x0 = [0;1;0.1]; %initial state for line
 elseif cline ==2
-    x0 = [50; 0; pi/2]; % initial state for circle
+    x0 = [0; -50; 0]; % initial state for circle
 else
-    x0=[50; 0; pi/2];
+    x0=[-2; -50; 0];
 end
 
 
@@ -159,6 +162,10 @@ for i = 1:length(t) - 1
         % set parameters
         error = norm(xx(:, i) - final_pose);
         target_state = return_x_reference(x0, line, kappa, error);
+        aaa = full(target_state);
+%         if aaa(1) <= -1 && aaa(2)<=-1
+%             break
+%         end
         args.p = [x0; target_state];
 
         % set initial condition
@@ -180,6 +187,8 @@ for i = 1:length(t) - 1
 end
 
 %% plot the result
+% first plot
+figure(1)
 plot(xx(1, :), xx(2, :), 'b.-', 'LineWidth', 2);
 hold on;
 % plot corresponding heading direction
@@ -189,6 +198,14 @@ hold off;
 axis equal;
 grid on;
 drawnow;
+
+% second plot
+figure(2)
+% plot the angle onver time
+% cut t as the same length as xx(3, :)
+x = linspace(0, t(end), length(xx(3, :)));
+plot(x, xx(3, :), 'b.-', 'LineWidth', 2);
+
 
 % get the reference target for example position, target
 function target_state = return_x_reference(x_real, target_line, kappa, error)
@@ -216,6 +233,7 @@ function target_state = return_x_reference(x_real, target_line, kappa, error)
     % Solve the problem using a guess
     sol = F('x0', 0, 'ubg', 0, 'lbg', 0);
     [x_ref, y_ref, theta] = target_line(sol.x + psi);
+    theta = mod(full(theta),2*pi);
     target_state = [x_ref; y_ref; theta];
     full(target_state)
 end
