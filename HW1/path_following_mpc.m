@@ -14,13 +14,13 @@ Cd = 0.45; % drag coefficient
 yita = 0.9; % efficiency of the motor
 gravity = 9.18; % m/s^2
 
-
+% initialize the params
 Q = zeros(3, 3);
 R = zeros(2, 2);
 E = 0;
 % params for the controller
 cmode = 2; % 1 for efficient mode, 2 for sport mode
-cline = 2; % 1 for straight line path, 2 for spline path, 3 for circle path
+cline = 3; % 1 for straight line path, 2 for spline path, 3 for circle path
 choose_mode;
 
 h = 0.2; % sampling time
@@ -29,7 +29,7 @@ N = 20; % prediction horizon
 
 % params for the simulation
 t_cont = 0.01; % continuous time
-t_sim = 500; % simulation time
+t_sim = 1000; % simulation time
 t = 0:t_cont:t_sim; % time
 
 %% models
@@ -86,7 +86,7 @@ calc_increment = Function('calc_increment', {s_states, input}, {bicycle_incremen
 
 % fuel consumption model
 s_a = SX.sym('a'); % acceleration
-Torque = r / G * (m * a + m * gravity * Cr + 0.5 * rho * A * Cd * (s_frontspeed * r) * (s_frontspeed * r));
+Torque = r / G * (m * s_a + m * gravity * Cr + 0.5 * rho * A * Cd * (s_frontspeed * r) * (s_frontspeed * r));
 calc_torque = Function('calc_torque', {s_a, s_frontspeed}, {Torque}, struct('allow_free',1)); % function for calculating fuel consumption
 
 %% control model
@@ -107,11 +107,12 @@ for k = 1:N
     st_next = X(:, k + 1); % next state
     obj = obj + (st - P(4:6))' * Q * (st - P(4:6)) + input' * R * input; % objective function
     
-%     if k > 1 
-%         a = r * (U(2, k) - U(2, k - 1)) / h_cont;
-%         torque = U(2,k)*calc_torque(a, U(2,k)); % torque
-%         obj = obj + torque'*E*torque; % objective function
-%     end
+    % fuel consumption model
+    if k > 1 
+        a = r * (U(2, k) - U(2, k - 1)) / h_cont;
+        torque_x_wheelspeed = U(2,k)*r / G * (m * a + m * gravity * Cr + 0.5 * rho * A * Cd * (U(2,k) * r) * (U(2,k) * r)); % torque
+        obj = obj + torque_x_wheelspeed'*E*torque_x_wheelspeed; % objective function
+    end
 
     % kutta method
     k1 = calc_increment(st, input);
@@ -175,7 +176,7 @@ X0 = repmat(xx(:, 1), 1, N + 1)'; % initial state decision variables
 record_target_theta = zeros(3, t_sim / h);
 record_speed = zeros(1, t_sim / h_cont);
 cnt = 1;
-iter = 1;
+iter = 0;
 
 % start simulation
 for i = 1:length(t) - 1

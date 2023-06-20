@@ -17,7 +17,7 @@ R = zeros(2, 2);
 E = 0;
 % params for the controller
 mode = 1; % 1 for efficient mode, 2 for sport mode
-line = 1; % 1 for straight line path, 2 for spline path, 3 for circle path
+line = 2; % 1 for straight line path, 2 for spline path, 3 for circle path
 choose_mode;
 
 h = 0.2; % sampling time
