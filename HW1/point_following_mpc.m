@@ -11,22 +11,18 @@ rho = 1.2; % kg/m^3
 Cd = 0.45; % drag coefficient
 yita = 0.9; % efficiency of the motor
 
-% params for the controller
-mode = 1; % 1 for efficient mode, 2 for sport mode
-line = 1; % 1 for straight line path, 2 for spline path, 3 for circle path
-
-h = 0.2; % sampling time
-h_cont = 0.01; % continuous time
-N = 20; % prediction horizon
-
 kappa = 0;
 Q = zeros(3, 3);
 R = zeros(2, 2);
 E = 0;
-
-mode = 3;
-line = 1;
+% params for the controller
+mode = 1; % 1 for efficient mode, 2 for sport mode
+line = 1; % 1 for straight line path, 2 for spline path, 3 for circle path
 choose_mode;
+
+h = 0.2; % sampling time
+h_cont = 0.01; % continuous time
+N = 20; % prediction horizon
 
 % params for the simulation
 t_cont = 0.01; % continuous time

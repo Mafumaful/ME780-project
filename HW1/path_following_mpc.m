@@ -12,7 +12,12 @@ A = 2; % m^2
 rho = 1.2; % kg/m^3
 Cd = 0.45; % drag coefficient
 yita = 0.9; % efficiency of the motor
+gravity = 9.18; % m/s^2
 
+
+Q = zeros(3, 3);
+R = zeros(2, 2);
+E = 0;
 % params for the controller
 cmode = 2; % 1 for efficient mode, 2 for sport mode
 cline = 2; % 1 for straight line path, 2 for spline path, 3 for circle path
@@ -21,10 +26,6 @@ choose_mode;
 h = 0.2; % sampling time
 h_cont = 0.01; % continuous time
 N = 20; % prediction horizon
-
-Q = zeros(3, 3);
-R = zeros(2, 2);
-E = 0;
 
 % params for the simulation
 t_cont = 0.01; % continuous time
@@ -83,6 +84,11 @@ s_thetadot = r * s_frontspeed * sin(s_delta) / l;
 bicycle_increment = [s_xdot; s_ydot; s_thetadot]; % state increments
 calc_increment = Function('calc_increment', {s_states, input}, {bicycle_increment}); % function for calculating state increments
 
+% fuel consumption model
+s_a = SX.sym('a'); % acceleration
+Torque = r / G * (m * a + m * gravity * Cr + 0.5 * rho * A * Cd * (s_frontspeed * r) * (s_frontspeed * r));
+calc_torque = Function('calc_torque', {s_a, s_frontspeed}, {Torque}, struct('allow_free',1)); % function for calculating fuel consumption
+
 %% control model
 % fuel consumption model
 P = SX.sym('P', 6); % parameters
@@ -100,6 +106,12 @@ for k = 1:N
     input = U(:, k); % current input
     st_next = X(:, k + 1); % next state
     obj = obj + (st - P(4:6))' * Q * (st - P(4:6)) + input' * R * input; % objective function
+    
+%     if k > 1 
+%         a = r * (U(2, k) - U(2, k - 1)) / h_cont;
+%         torque = U(2,k)*calc_torque(a, U(2,k)); % torque
+%         obj = obj + torque'*E*torque; % objective function
+%     end
 
     % kutta method
     k1 = calc_increment(st, input);
@@ -141,7 +153,7 @@ args.ubx(3:3:3 * (N + 1), 1) = inf; % upper bound of theta
 args.lbx(3 * (N + 1) + 1:2:3 * (N + 1) + 2 * N, 1) = -0.5; % lower bound of delta
 args.ubx(3 * (N + 1) + 1:2:3 * (N + 1) + 2 * N, 1) = 0.5; % upper bound of delta
 args.lbx(3 * (N + 1) + 2:2:3 * (N + 1) + 2 * N, 1) = 0; % lower bound of front speed
-args.ubx(3 * (N + 1) + 2:2:3 * (N + 1) + 2 * N, 1) = 1000; % upper bound of front speed
+args.ubx(3 * (N + 1) + 2:2:3 * (N + 1) + 2 * N, 1) = 100/3.6/r; % upper bound of front speed
 
 %% simulation
 % target position
@@ -152,7 +164,7 @@ if cline == 1
 elseif cline == 2
     x0 = [0; 0; 0]; % initial state for spline
 else
-    x0 = [-3; -50; 0];% initial state for circle
+    x0 = [-3; -50; 0]; % initial state for circle
 end
 
 xx = zeros(3, length(t)); % states
@@ -161,7 +173,7 @@ u0 = zeros(N, 2); % initial control input
 X0 = repmat(xx(:, 1), 1, N + 1)'; % initial state decision variables
 
 record_target_theta = zeros(3, t_sim / h);
-record_speed = zeros(1,t_sim/h_cont);
+record_speed = zeros(1, t_sim / h_cont);
 cnt = 1;
 iter = 1;
 
@@ -186,7 +198,7 @@ for i = 1:length(t) - 1
         u = reshape(full(sol.x(3 * (N + 1) + 1:end))', 2, N)'; % get controls only
         u_opt = u(1, :); % get optimal control
         record_target_theta(:, cnt) = full(target_state);
-        
+
         cnt = cnt + 1;
     end
 
@@ -195,7 +207,8 @@ for i = 1:length(t) - 1
     % calculate the next state
     % x0 = full(sol.x(4:6, :));
     xx(:, i + 1) = x0; % get solution trajectory
-    record_speed(i) = full(u_opt(2)*r*3.6);
+    record_speed(i) = full(u_opt(2) * r * 3.6);
+
     if norm(x0 - full(final_pose)) < 1
         break;
     end
@@ -224,7 +237,7 @@ grid on;
 figure(2)
 % plot the angle onver time
 t2 = h:h:t_sim;
-plot(t2(1:cnt-1), record_target_theta(3, 1:cnt - 1), 'b.-', 'LineWidth', 2);
+plot(t2(1:cnt - 1), record_target_theta(3, 1:cnt - 1), 'b.-', 'LineWidth', 2);
 grid on;
 
 % third plot
