@@ -19,8 +19,8 @@ Q = zeros(3, 3);
 R = zeros(2, 2);
 E = 0;
 % params for the controller
-cmode = 2; % 1 for efficient mode, 2 for sport mode
-cline = 3; % 1 for straight line path, 2 for spline path, 3 for circle path
+cmode = 1; % 1 for efficient mode, 2 for sport mode
+cline = 2; % 1 for straight line path, 2 for spline path, 3 for circle path
 choose_mode;
 
 h = 0.2; % sampling time
