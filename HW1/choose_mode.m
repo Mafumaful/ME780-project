@@ -11,14 +11,14 @@ if cmode ==1
         % spcline path, efficient mode
         kappa = 20;
         Q = diag([10,10,2]);
-        R = diag([1,1]);
+        R = diag([2,2]);
         E = 2.5*10^-10;
         disp('spcline path, efficient mode');
     elseif cline == 3
         % circle path, efficient mode
-        kappa = 20;
+        kappa = 10;
         Q = diag([100,100,0]);
-        R = diag([3,3]);
+        R = diag([1,1]);
         E = 2.5*10^-10;
         disp('circle path, efficient mode');
     else
@@ -41,7 +41,7 @@ elseif cmode == 2
         disp('spcline path, sport mode');
     elseif cline == 3
         % circle path, sport mode
-        kappa = 20;
+        kappa = 10;
         Q = diag([100,100,0]);
         R = diag([1,1]);
         E = 0;
