@@ -19,7 +19,7 @@ Q = zeros(3, 3);
 R = zeros(2, 2);
 E = 0;
 % params for the controller
-cmode = 1; % 1 for efficient mode, 2 for sport mode
+cmode = 2; % 1 for efficient mode, 2 for sport mode
 cline = 3; % 1 for straight line path, 2 for spline path, 3 for circle path
 choose_mode;
 
@@ -246,6 +246,7 @@ hold off;
 grid on;
 % drawnow;
 
+
 % second plot
 figure(2)
 % plot the angle onver time
@@ -256,6 +257,8 @@ ylabel('Speed (km/h)', 'FontSize', 12);
 title('Speed[km/h]', 'FontSize', 12);
 grid on;
 
+xlim([0,53]);
+
 % third plot
 figure(3)
 t2 = h:h:t_sim;
@@ -265,6 +268,8 @@ xlabel('Time (s)', 'FontSize', 12);
 ylabel('Steering Angle[\circ]', 'FontSize', 12);
 title('Steering Angle[\circ]', 'FontSize', 12);
 grid on;
+
+xlim([0,53]);
 
 % calculate energy consumption
 energy = zeros(1, iter);
@@ -285,6 +290,8 @@ xlabel('Time (s)', 'FontSize', 12);
 ylabel('Energy (Joule)', 'FontSize', 12);
 title('Energy Consumption[Joule]', 'FontSize', 12);
 grid on;
+
+xlim([0,53]);
 
 % get the reference target for example position, target
 function target_state = return_x_reference(x_real, target_line, kappa)
