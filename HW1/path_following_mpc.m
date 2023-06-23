@@ -20,7 +20,7 @@ R = zeros(2, 2);
 E = 0;
 % params for the controller
 cmode = 1; % 1 for efficient mode, 2 for sport mode
-cline = 2; % 1 for straight line path, 2 for spline path, 3 for circle path
+cline = 3; % 1 for straight line path, 2 for spline path, 3 for circle path
 choose_mode;
 
 h = 0.2; % sampling time
@@ -111,7 +111,7 @@ for k = 1:N
     % fuel consumption model
     if k > 1
         a = r * (U(2, k) - U(2, k - 1)) / h_cont;
-        torque_x_wheelspeed = U(2, k) * r / G * (m * a + m * gravity * Cr + 0.5 * rho * A * Cd * (U(2, k) * r) * (U(2, k) * r)); % torque
+        torque_x_wheelspeed = max(U(2, k) * r / G * (m * a + m * gravity * Cr + 0.5 * rho * A * Cd * (U(2, k) * r) * (U(2, k) * r)),0); % torque
         obj = obj + torque_x_wheelspeed' * E * torque_x_wheelspeed; % objective function
 
         comsumption = U(:, k) - U(:, k - 1);
