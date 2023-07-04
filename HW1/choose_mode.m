@@ -18,7 +18,7 @@ if cmode ==1
         % circle path, efficient mode
         kappa = 10;
         Q = diag([100,100,0]);
-        R = diag([1,1]);
+        R = diag([5,5]);
         E = 2.5*10^-10;
         disp('circle path, efficient mode');
     else

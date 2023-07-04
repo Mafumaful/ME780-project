@@ -20,7 +20,7 @@ R = zeros(2, 2);
 E = 0;
 % params for the controller
 cmode = 2; % 1 for efficient mode, 2 for sport mode
-cline = 3; % 1 for straight line path, 2 for spline path, 3 for circle path
+cline = 1; % 1 for straight line path, 2 for spline path, 3 for circle path
 choose_mode;
 
 h = 0.2; % sampling time
@@ -190,7 +190,6 @@ for i = 1:length(t) - 1
 
     if mod(i, h / h_cont) == 1
         % set parameters
-        error = norm(xx(:, i) - final_pose);
         target_state = return_x_reference(x0, line, kappa);
 
         args.p = [x0; target_state];
@@ -210,7 +209,6 @@ for i = 1:length(t) - 1
         cnt = cnt + 1;
     end
 
-    xx(:, i + 1) = full(sol.x(1:3)); % get solution trajectory
     x0 = full(x0 + h_cont * calc_increment(x0, u_opt)); % update initial state
     % calculate the next state
     % x0 = full(sol.x(4:6, :));
@@ -257,7 +255,7 @@ ylabel('Speed (km/h)', 'FontSize', 12);
 title('Speed[km/h]', 'FontSize', 12);
 grid on;
 
-xlim([0,53]);
+xlim([0,76]);
 
 % third plot
 figure(3)
@@ -269,7 +267,7 @@ ylabel('Steering Angle[\circ]', 'FontSize', 12);
 title('Steering Angle[\circ]', 'FontSize', 12);
 grid on;
 
-xlim([0,53]);
+xlim([0,76]);
 
 % calculate energy consumption
 energy = zeros(1, iter);
@@ -291,7 +289,7 @@ ylabel('Energy (Joule)', 'FontSize', 12);
 title('Energy Consumption[Joule]', 'FontSize', 12);
 grid on;
 
-xlim([0,53]);
+xlim([0,76]);
 
 % get the reference target for example position, target
 function target_state = return_x_reference(x_real, target_line, kappa)
