@@ -1,0 +1,13 @@
+v1_max = omega_max/beta_dif/beta_1*R_tire
+v1_min = omega_min/beta_dif/beta_1*R_tire
+x = v1_min:0.1:v1_max;
+v2_max = omega_max/beta_dif/beta_2*R_tire
+v2_min = omega_min/beta_dif/beta_2*R_tire
+v3_max = omega_max/beta_dif/beta_3*R_tire
+v3_min = omega_min/beta_dif/beta_3*R_tire
+v4_max = omega_max/beta_dif/beta_4*R_tire
+v4_min = omega_min/beta_dif/beta_4*R_tire
+v5_max = omega_max/beta_dif/beta_5*R_tire
+v5_min = omega_min/beta_dif/beta_5*R_tire
+v6_max = omega_max/beta_dif/beta_6*R_tire
+v6_min = omega_min/beta_dif/beta_6*R_tire
