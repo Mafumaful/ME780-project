@@ -40,3 +40,12 @@ legend('1st gear', '2nd gear', '3rd gear', '4th gear', '5th gear', '6th gear');
 title('Torque vs. Speed');
 xlabel('wheel speed (rpm)');
 ylabel('Torque (Nm)');
+
+y21 = B0 + B1*x11.^2;
+y22 = B0 + B1*x12.^2;
+y23 = B0 + B1*x13.^2;
+y24 = B0 + B1*x14.^2;
+y25 = B0 + B1*x15.^2;
+y26 = B0 + B1*x16.^2;
+
+plot(x11, y21, 'r', x12, y22, 'g', x13, y23, 'b', x14, y24, 'c', x15, y25, 'm', x16, y26, 'k');
