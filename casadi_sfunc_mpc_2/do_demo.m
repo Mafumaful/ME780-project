@@ -37,7 +37,7 @@ end
 F = Function('F', {X0, U}, {X, Q}, {'x0','p'}, {'xf', 'qf'});
 
 % Start with an empty NLP
-w={};
+w = {};
 w0 = [];
 lbw = [];
 ubw = [];
