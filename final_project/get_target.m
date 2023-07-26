@@ -1,4 +1,4 @@
-function [sys,x0,str,ts,simStateCompliance] = get_target(t,x,u,flag)
+function [sys,x0,str,ts,simStateCompliance] = get_target(t,x,u,flag,Path)
 %SFUNTMPL General MATLAB S-Function Template
 %   With MATLAB S-functions, you can define you own ordinary differential
 %   equations (ODEs), discrete system equations, and/or just about
@@ -123,7 +123,7 @@ switch flag,
   % Outputs %
   %%%%%%%%%%%
   case 3,
-    sys=mdlOutputs(t,x,u);
+    sys=mdlOutputs(t,x,u,Path);
 
   %%%%%%%%%%%%%%%%%%%%%%%
   % GetTimeOfNextVarHit %
@@ -229,7 +229,7 @@ sys = [];
 % Return the block outputs.
 %=============================================================================
 %
-function sys=mdlOutputs(t,x,u)
+function sys=mdlOutputs(t,x,u,Path)
 
 sys = u;
 
