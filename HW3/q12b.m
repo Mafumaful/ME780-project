@@ -52,18 +52,18 @@ subplot(3, 1, 1);
 plot(t, road_profile);
 xlabel('Time (s)');
 ylabel('Road Profile (m)');
-title('Half-Sine Road Excitation');
+title('Wheel Travel through a Half-Sine Road Excitation');
 
 subplot(3, 1, 2);
 plot(t, displacement(1, :), 'b', t, displacement(2, :), 'r');
-legend('Displacement x1', 'Displacement x2');
+legend('Sprung', 'Unsprung');
 xlabel('Time (s)');
 ylabel('Displacement (m)');
-title('Vehicle Response');
+title('Vehicle Displacement');
 
 subplot(3, 1, 3);
 plot(t, acceleration(1, :), 'b', t, acceleration(2, :), 'r');
-legend('Acceleration x1', 'Acceleration x2');
+legend('Sprung', 'Unsprung');
 xlabel('Time (s)');
 ylabel('Acceleration (m/s^2)');
 title('Vehicle Acceleration');
