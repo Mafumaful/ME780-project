@@ -1,5 +1,5 @@
 %% params
-velo = 5/3.6;
+velo = 50/3.6;
 
 % Vehicle parameters
 m = mf;       % Mass of the vehicle (kg)

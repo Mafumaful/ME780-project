@@ -1,12 +1,12 @@
 %% params
-velo = 50/3.6;
+velo = 5/3.6;
 % Vehicle parameters
 m1 = mf;      % Mass of the first sprung mass (kg)
 m2 = unsprung_mass;       % Mass of the second sprung mass (kg)
 k1 = kf;     % Spring stiffness for the first mass (N/m)
 k2 = vertcal_stiffness;      % Spring stiffness for the second mass (N/m)
-c1 = cr_absorb;      % Damping coefficient for the first mass (Ns/m)
-c2 = dist_absorb;       % Damping coefficient for the second mass (Ns/m)
+c1 = cf_absorb;      % Damping coefficient for the first mass (Ns/m)
+% c2 = dist_absorb;       % Damping coefficient for the second mass (Ns/m)
 
 % Half-sine road profile parameters
 A = 0.1;       % Amplitude (m)
@@ -38,8 +38,8 @@ displacement(:, 1) = initial_displacement;
 velocity(:, 1) = initial_velocity;
 for i = 2:n
     % Calculate accelerations using the 2-DOF model equations of motion
-    acceleration(1, i-1) = (1/m1) * (road_profile(i) - k1*displacement(1, i-1) - c1*velocity(1, i-1) - k2*(displacement(1, i-1) - displacement(2, i-1)));
-    acceleration(2, i-1) = (1/m2) * (k2*(displacement(1, i-1) - displacement(2, i-1)) - c2*velocity(2, i-1));
+    acceleration(1, i-1) = (1/m1) * ( - k1*(-road_profile(i)+displacement(1, i-1)) - c1*velocity(1, i-1) - k2*(displacement(1, i-1) - displacement(2, i-1)));
+    acceleration(2, i-1) = (1/m2) * (k2*(displacement(1, i-1) - displacement(2, i-1)) - c1*velocity(2, i-1));
     
     % Update velocities and displacements using the Euler method
     velocity(:, i) = velocity(:, i-1) + acceleration(:, i-1) * dt;
