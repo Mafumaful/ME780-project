@@ -1,5 +1,5 @@
 %% params
-velo = 50/3.6;
+velo = 5/3.6;
 
 % Vehicle parameters
 m = mf;       % Mass of the vehicle (kg)
@@ -11,7 +11,7 @@ A = 0.1;       % Amplitude (m)
 f = velo/2/wavelength;          % Frequency (Hz)
 
 % Simulation parameters
-duration = 2;      % Duration of simulation (seconds)
+duration = 5;      % Duration of simulation (seconds)
 dt = 0.01;          % Time step (seconds)
 
 

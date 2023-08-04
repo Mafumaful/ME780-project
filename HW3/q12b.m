@@ -1,5 +1,5 @@
 %% params
-velo = 50/3.6;
+velo = 5/3.6;
 % Vehicle parameters
 m1 = mf;      % Mass of the first sprung mass (kg)
 m2 = unsprung_mass;       % Mass of the second sprung mass (kg)
