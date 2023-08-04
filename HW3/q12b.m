@@ -1,5 +1,5 @@
 %% params
-velo = 5/3.6;
+velo = 50/3.6;
 % Vehicle parameters
 m1 = mf;      % Mass of the first sprung mass (kg)
 m2 = unsprung_mass;       % Mass of the second sprung mass (kg)
@@ -14,7 +14,7 @@ f = velo/2/wavelength;          % Frequency (Hz)
 
 %% simulation
 % Simulation parameters
-duration = 5;      % Duration of simulation (seconds)
+duration = 2;      % Duration of simulation (seconds)
 dt = 0.01;          % Time step (seconds)
 
 % Time vector
