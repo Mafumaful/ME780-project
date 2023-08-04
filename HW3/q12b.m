@@ -1,5 +1,5 @@
 %% params
-velo = 5/3.6;
+velo = 50/3.6;
 % Vehicle parameters
 m1 = mf;      % Mass of the first sprung mass (kg)
 m2 = unsprung_mass;       % Mass of the second sprung mass (kg)
@@ -38,7 +38,7 @@ displacement(:, 1) = initial_displacement;
 velocity(:, 1) = initial_velocity;
 for i = 2:n
     % Calculate accelerations using the 2-DOF model equations of motion
-    acceleration(1, i-1) = (1/m1) * ( - k1*(-road_profile(i)+displacement(1, i-1)) - c1*velocity(1, i-1) - k2*(displacement(1, i-1) - displacement(2, i-1)));
+    acceleration(1, i-1) = (1/m1) * ( k1*(road_profile(i) - displacement(1, i-1)) - c1*velocity(1, i-1) - k2*(displacement(1, i-1) - displacement(2, i-1)));
     acceleration(2, i-1) = (1/m2) * (k2*(displacement(1, i-1) - displacement(2, i-1)) - c1*velocity(2, i-1));
     
     % Update velocities and displacements using the Euler method
@@ -50,12 +50,14 @@ end
 figure;
 subplot(3, 1, 1);
 plot(t, road_profile);
+grid on;
 xlabel('Time (s)');
 ylabel('Road Profile (m)');
 title('Wheel Travel through a Half-Sine Road Excitation');
 
 subplot(3, 1, 2);
 plot(t, displacement(1, :), 'b', t, displacement(2, :), 'r');
+grid on;
 legend('Sprung', 'Unsprung');
 xlabel('Time (s)');
 ylabel('Displacement (m)');
@@ -63,6 +65,7 @@ title('Vehicle Displacement');
 
 subplot(3, 1, 3);
 plot(t, acceleration(1, :), 'b', t, acceleration(2, :), 'r');
+grid on;
 legend('Sprung', 'Unsprung');
 xlabel('Time (s)');
 ylabel('Acceleration (m/s^2)');
