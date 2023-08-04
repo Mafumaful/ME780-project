@@ -48,14 +48,14 @@ plot(t, road_profile);
 xlabel('Time (s)');
 ylabel('Road Profile (m)');
 grid on;
-title('Half-Sine Road Excitation');
+title('Wheel Travel through a Half-Sine Road Excitation');
 
 subplot(3, 1, 2);
 plot(t, displacement);
 xlabel('Time (s)');
 ylabel('Displacement (m)');
 grid on;
-title('Vehicle Response');
+title('Vehicle Displacement');
 
 subplot(3, 1, 3);
 plot(t, acceleration);
