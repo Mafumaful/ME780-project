@@ -41,7 +41,7 @@ for i = 2:n
     displacement(i) = displacement(i-1) + velocity(i) * dt;
 end
 
-% Plot the response
+%% Plot the response
 figure;
 subplot(3, 1, 1);
 plot(t, road_profile);
